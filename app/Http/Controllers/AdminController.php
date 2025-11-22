@@ -48,12 +48,19 @@ class AdminController extends Controller
         'pdf'   => 'required|mimes:pdf|max:10240'
     ]);
 
-    $path = $request->file('pdf')->store('forms', 'public');
+    $file = $request->file('pdf');
+    $path = $file->store('forms', 'public');
     
-    Form::create([
+    // DEBUG: Cek ukuran file
+   
+    
+    $form = Form::create([
         'title' => $request->title,
-        'file_path' => asset('storage/' . $path) // INI YANG PENTING
+        'file_path' => '/storage/' . $path,
+        'file_size' => $file->getSize() // Pastikan ini
     ]);
+
+    // DEBUG: Cek data yang disimpan
 
     return back()->with('success', 'Form berhasil diupload!');
 }
@@ -63,6 +70,16 @@ public function formIndex()
     $forms = Form::all();
     return view('admin.forms', compact('forms'));
 }
+
+public function chatToggle($id)
+{
+    $qa = ChatQA::findOrFail($id);
+    $qa->active = !$qa->active;
+    $qa->save();
+    
+    return back()->with('success', 'Status Q&A berhasil diubah');
+}
+
 
 public function formDestroy($id)
 {

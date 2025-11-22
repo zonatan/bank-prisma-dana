@@ -5,5 +5,5 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Form extends Model {
-    protected $fillable = ['title', 'file_path'];
+    protected $fillable = ['title', 'file_path', 'file_size'];
 }

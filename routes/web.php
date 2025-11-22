@@ -30,12 +30,14 @@ Route::get('/chat/history', [ChatController::class, 'history'])->name('chat.hist
 
 // === LANGUAGE (bisa diakses semua) ===
 Route::post('/lang', [LanguageController::class, 'set'])->name('lang.set');
+ Route::patch('/admin/chat/toggle/{id}', [AdminController::class, 'chatToggle'])->name('admin.chat.toggle');
 
 // === ADMIN PANEL (CEK MANUAL DI CONTROLLER) ===
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/admin/api/stats', [DashboardController::class, 'getStats'])->name('admin.stats.api');
 
     // Q&A Chatbot
     Route::get('/chat', [AdminController::class, 'chatIndex'])->name('chat');
@@ -45,6 +47,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::patch('/chat/update/{id}', [AdminController::class, 'chatUpdate'])->name('chat.update');
     Route::patch('/chat/order/{id}', [AdminController::class, 'chatOrder'])->name('chat.order');
     Route::get('/chat/export', [AdminController::class, 'exportExcel'])->name('chat.export');
+   
 
     // Form PDF
     Route::get('/forms', [AdminController::class, 'formIndex'])->name('forms');

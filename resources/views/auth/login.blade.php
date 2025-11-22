@@ -8,7 +8,11 @@
         <!-- Logo & Header -->
         <div class="text-center">
             <div class="mx-auto w-20 h-20 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mb-4">
-                <i class="fas fa-university text-white text-2xl"></i>
+               <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
+        <img src="{{ asset('images/logo-bank.png') }}" 
+             alt="Bank Prisma Dana" 
+             class="w-8 h-8 object-contain">
+    </div>
             </div>
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
                 Masuk ke Akun Anda
