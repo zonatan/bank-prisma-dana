@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\ChatQA;
 use App\Models\Form;
+use App\Models\FormSubmission;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Cek apakah user adalah admin
-        if (!session('user') || session('user')->role !== 'admin') {
-            return redirect()->route('home');
+        // Cek apakah user adalah admin menggunakan Auth
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect()->route('home')->with('error', 'Akses ditolak.');
         }
 
         // Ambil data untuk dashboard
@@ -22,6 +24,8 @@ class DashboardController extends Controller
         $totalQAs = ChatQA::count();
         $totalForms = Form::count();
         $activeQAs = ChatQA::where('active', true)->count();
+        $totalSubmissions = FormSubmission::count();
+        $pendingSubmissions = FormSubmission::where('status', 'new')->count();
 
         // Data untuk chart (user registrasi 7 hari terakhir)
         $userRegistrations = $this->getUserRegistrations();
@@ -36,14 +40,22 @@ class DashboardController extends Controller
                           ->take(5)
                           ->get();
 
+        $recentSubmissions = FormSubmission::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
         return view('admin.dashboard', compact(
             'totalUsers',
             'totalQAs',
             'totalForms',
             'activeQAs',
+            'totalSubmissions',
+            'pendingSubmissions',
             'userRegistrations',
             'recentUsers',
-            'recentForms'
+            'recentForms',
+            'recentSubmissions'
         ));
     }
 
@@ -72,11 +84,11 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get dashboard statistics for API (optional)
+     * Get dashboard statistics for API
      */
     public function getStats()
     {
-        if (!session('user') || session('user')->role !== 'admin') {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -85,6 +97,8 @@ class DashboardController extends Controller
             'total_qa' => ChatQA::count(),
             'total_forms' => Form::count(),
             'active_qa' => ChatQA::where('active', true)->count(),
+            'total_submissions' => FormSubmission::count(),
+            'pending_submissions' => FormSubmission::where('status', 'new')->count(),
             'user_registrations' => $this->getUserRegistrations()
         ];
 
