@@ -9,25 +9,27 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+<body class="bg-gradient-to-br from-red-50 to-red-100 min-h-screen">
 
 <!-- SIDEBAR + CONTENT -->
 <div class="flex">
     <!-- SIDEBAR -->
-    <aside id="sidebar" class="bg-gradient-to-b from-indigo-800 to-indigo-900 text-white min-h-screen p-6 shadow-xl transition-all duration-300 relative z-10 sidebar-expanded">
+    <aside id="sidebar" class="bg-gradient-to-b from-red-700 to-red-800 text-white min-h-screen p-6 shadow-xl transition-all duration-300 relative z-10 sidebar-expanded">
         <!-- Toggle Button -->
-        <button id="sidebar-toggle" class="absolute -right-3 top-8 bg-white text-indigo-600 w-6 h-6 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform">
+        <button id="sidebar-toggle" class="absolute -right-3 top-8 bg-white text-red-600 w-6 h-6 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform">
             <i class="fas fa-chevron-left text-xs" id="toggle-icon"></i>
         </button>
 
         <!-- Logo Section -->
         <div class="mb-10 pt-4 flex items-center gap-3 transition-all duration-300">
-            <div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center shadow-lg flex-shrink-0">
-                <i class="fas fa-university text-white text-xl"></i>
-            </div>
+            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
+        <img src="{{ asset('images/logo-bank.png') }}" 
+             alt="Bank Prisma Dana" 
+             class="w-8 h-8 object-contain">
+    </div>
             <div class="sidebar-content transition-all duration-300 overflow-hidden">
                 <h1 class="text-xl font-bold whitespace-nowrap">Bank Prisma Dana</h1>
-                <p class="text-indigo-200 text-xs mt-1 whitespace-nowrap">Admin Panel</p>
+                <p class="text-red-200 text-xs mt-1 whitespace-nowrap">Admin Panel</p>
             </div>
         </div>
 
@@ -142,7 +144,7 @@
                     <!-- User Info -->
                     @if(session('user'))
                     <div class="flex items-center gap-3 bg-white/50 rounded-xl px-3 py-2 shadow-sm">
-                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center shadow-md">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center shadow-md">
                             <span class="text-white font-bold text-xs sm:text-sm">{{ substr(session('user')->name, 0, 1) }}</span>
                         </div>
                         <div class="hidden sm:block">
@@ -166,7 +168,7 @@
 <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-20 hidden lg:hidden backdrop-blur-sm"></div>
 
 <!-- Mobile Sidebar -->
-<div id="mobile-sidebar" class="fixed top-0 left-0 w-64 h-full bg-gradient-to-b from-indigo-800 to-indigo-900 text-white transform -translate-x-full transition-transform duration-300 z-30 lg:hidden">
+<div id="mobile-sidebar" class="fixed top-0 left-0 w-64 h-full bg-gradient-to-b from-red-700 to-red-800 text-white transform -translate-x-full transition-transform duration-300 z-30 lg:hidden">
     <div class="p-6">
         <!-- Mobile Logo -->
         <div class="mb-10 pt-4 flex items-center gap-3">
@@ -175,7 +177,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold">Bank Prisma Dana</h1>
-                <p class="text-indigo-200 text-xs mt-1">Admin Panel</p>
+                <p class="text-red-200 text-xs mt-1">Admin Panel</p>
             </div>
             <button id="close-mobile-menu" class="ml-auto p-2 rounded-lg hover:bg-white/10 transition-colors">
                 <i class="fas fa-times"></i>
