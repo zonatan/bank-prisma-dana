@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ session('locale', 'id') }}" class="scroll-smooth">
+<html lang="{{ app()->getLocale() }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,13 +18,13 @@
     <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
         <!-- Logo -->
         <a href="{{ route('home') }}" class="flex items-center gap-2 text-2xl font-bold text-red-600 transition-colors">
-    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
-        <img src="{{ asset('images/logo-bank.png') }}" 
-             alt="Bank Prisma Dana" 
-             class="w-8 h-8 object-contain">
-    </div>
-    <span>Bank Prisma Dana</span>
-</a>
+            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                <img src="{{ asset('images/logo-bank.png') }}" 
+                     alt="Bank Prisma Dana" 
+                     class="w-8 h-8 object-contain">
+            </div>
+            <span>Bank Prisma Dana</span>
+        </a>
         
         <!-- Navigation Links -->
         <div class="hidden md:flex items-center gap-8">
@@ -49,15 +49,25 @@
         <!-- Right Section -->
         <div class="flex items-center gap-4">
             <!-- AUTH -->
-            @if(session('user'))
+            @auth
                 <div class="flex items-center gap-3">
+                    <!-- Tombol History -->
+                    <a href="{{ route('form.history') }}" 
+                       class="p-2.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300 group relative"
+                       title="History">
+                        <i class="fas fa-history text-lg"></i>
+                        <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                            History
+                        </span>
+                    </a>
+                    
                     <div class="flex items-center gap-2 bg-gray-100 rounded-full py-1.5 px-3">
                         <div class="w-7 h-7 rounded-full bg-gradient-to-r from-red-500 to-red-700 flex items-center justify-center">
-                            <span class="text-white text-xs font-bold">{{ substr(session('user')->name, 0, 1) }}</span>
+                            <span class="text-white text-xs font-bold">{{ substr(Auth::user()->name, 0, 1) }}</span>
                         </div>
-                        <span class="text-sm font-medium">{{ session('user')->name }}</span>
+                        <span class="text-sm font-medium">{{ Auth::user()->name }}</span>
                     </div>
-                    @if(session('user')->role === 'admin')
+                    @if(Auth::user()->role === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 bg-gradient-to-r from-red-600 to-red-800 text-white rounded-lg text-xs font-medium hover:shadow-lg transition-all duration-300">
                             <i class="fas fa-cog mr-1"></i> Admin Panel
                         </a>
@@ -78,17 +88,8 @@
                         <i class="fas fa-user-plus mr-1.5"></i> Daftar
                     </a>
                 </div>
-            @endif
+            @endauth
 
-            <!-- Language -->
-            <form action="{{ route('lang.set') }}" method="POST" class="inline">
-                @csrf
-                <select name="lang" onchange="this.form.submit()" class="text-sm border rounded-lg p-2 bg-white text-gray-800 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all">
-                    <option value="id" {{ session('locale') == 'id' ? 'selected' : '' }}>ID</option>
-                    <option value="en" {{ session('locale') == 'en' ? 'selected' : '' }}>EN</option>
-                </select>
-            </form>
-            
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-300">
                 <i class="fas fa-bars text-gray-700"></i>
@@ -111,6 +112,51 @@
             <a href="#kontak" class="nav-link text-gray-700 hover:text-red-600 font-medium transition-colors duration-200 py-2">
                 Kontak
             </a>
+            
+            <!-- Tombol History untuk Mobile -->
+            @auth
+                <a href="{{ route('form.history') }}" class="flex items-center gap-3 py-2 border-t border-gray-200 mt-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center">
+                        <i class="fas fa-history text-white text-sm"></i>
+                    </div>
+                    <span class="text-gray-700 font-medium">History</span>
+                </a>
+            @endauth
+            
+            <!-- Mobile Auth Links -->
+            @auth
+                <div class="pt-4 border-t border-gray-200">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-red-700 flex items-center justify-center">
+                            <span class="text-white text-xs font-bold">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-800">{{ Auth::user()->name }}</p>
+                            <p class="text-xs text-gray-600">{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+                    @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}" class="block w-full text-center bg-red-600 text-white py-2 rounded-lg text-sm font-medium mb-2">
+                            <i class="fas fa-cog mr-1"></i> Admin Panel
+                        </a>
+                    @endif
+                    <form action="{{ route('logout') }}" method="POST" class="w-full">
+                        @csrf
+                        <button type="submit" class="block w-full text-center bg-gray-600 text-white py-2 rounded-lg text-sm font-medium">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            @else
+                <div class="pt-4 border-t border-gray-200 flex flex-col gap-2">
+                    <a href="{{ route('login') }}" class="text-center bg-red-600 text-white py-2 rounded-lg text-sm font-medium">
+                        <i class="fas fa-sign-in-alt mr-1"></i> Login
+                    </a>
+                    <a href="{{ route('register') }}" class="text-center border border-red-600 text-red-600 py-2 rounded-lg text-sm font-medium">
+                        <i class="fas fa-user-plus mr-1"></i> Daftar
+                    </a>
+                </div>
+            @endauth
         </div>
     </div>
 </nav>
@@ -300,6 +346,12 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
+
+    // Check auth status on page load (for debugging)
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Auth status:', @json(Auth::check()));
+        console.log('User:', @json(Auth::user()));
+    });
 </script>
 
 <style>
