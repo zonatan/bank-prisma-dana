@@ -45,29 +45,6 @@
             </div>
         </div>
 
-        <div class="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-2xl p-4 sm:p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-purple-600 text-sm font-medium">Admin</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $users->where('role', 'admin')->count() }}</p>
-                </div>
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-user-shield text-white text-lg"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-4 sm:p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-orange-600 text-sm font-medium">User Biasa</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $users->where('role', 'user')->count() }}</p>
-                </div>
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-user text-white text-lg"></i>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Success/Error Messages -->
@@ -207,13 +184,7 @@
                         </td>
                         <td class="px-4 lg:px-6 py-4">
                             <div class="flex items-center gap-2">
-                                @if($user->role !== 'admin')
-                                <button onclick="promoteUser({{ $user->id }})"
-                                        class="flex items-center gap-1.5 px-3 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium">
-                                    <i class="fas fa-user-shield text-xs"></i>
-                                    Jadikan Admin
-                                </button>
-                                @endif
+                                
                                 <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
                                     <button type="submit" 

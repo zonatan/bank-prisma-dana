@@ -500,22 +500,6 @@
 </section>
 
 <!-- CTA SECTION -->
-<section class="py-16 bg-gradient-to-r from-red-600 to-red-700 text-white">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-        <h2 class="text-3xl font-bold mb-6">Butuh Informasi Lebih Lanjut?</h2>
-        <p class="text-xl mb-8 opacity-90">
-            Konsultasikan kebutuhan tabungan dan simpanan Anda dengan ahli kami
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#kontak" class="bg-white text-red-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg">
-                Hubungi Konsultan Kami
-            </a>
-            <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-red-600 transition">
-                Kalkulator Bunga
-            </a>
-        </div>
-    </div>
-</section>
 
 <!-- KONTAK & LOKASI -->
 <section id="kontak" class="py-16 bg-white">
