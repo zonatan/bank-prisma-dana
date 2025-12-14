@@ -123,12 +123,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div class="flex items-center gap-2">
                             <!-- View PDF -->
-                            <a href="{{ route('admin.forms.submission.view-pdf', $submission->id) }}" 
-                               target="_blank"
-                               class="text-blue-600 hover:text-blue-900 transition-colors"
-                               title="Lihat PDF">
-                                <i class="fas fa-eye"></i>
-                            </a>
+                            
 
                             <!-- Download PDF -->
                             <a href="{{ route('admin.forms.submission.download', $submission->id) }}"
@@ -145,11 +140,7 @@
                             </button>
 
                             <!-- View Details -->
-                            <button onclick="viewDetails({{ $submission->id }})"
-                                    class="text-gray-600 hover:text-gray-900 transition-colors"
-                                    title="Lihat Detail">
-                                <i class="fas fa-info-circle"></i>
-                            </button>
+                            
                         </div>
                     </td>
                 </tr>

@@ -53,21 +53,7 @@
         </div>
 
         <!-- Form PDF -->
-        <div class="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-2xl p-4 sm:p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-purple-600 text-sm font-medium">Form PDF</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-1">{{ $totalForms }}</p>
-                    <p class="text-purple-600 text-xs mt-2">
-                        <i class="fas fa-file-pdf mr-1"></i>
-                        Dokumen tersedia
-                    </p>
-                </div>
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-file-pdf text-white text-lg"></i>
-                </div>
-            </div>
-        </div>
+        
 
         <!-- System Status -->
         <div class="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-2xl p-4 sm:p-6">
@@ -130,18 +116,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('admin.forms') }}" 
-                   class="p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-file-pdf text-white"></i>
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-800 group-hover:text-green-600">Kelola Form</p>
-                            <p class="text-xs text-gray-600">{{ $totalForms }} dokumen</p>
-                        </div>
-                    </div>
-                </a>
+                
 
                 <a href="{{ route('admin.users') }}" 
                    class="p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors group">

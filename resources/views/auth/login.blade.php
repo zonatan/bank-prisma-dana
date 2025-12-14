@@ -104,9 +104,7 @@
                         <input type="checkbox" name="remember" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                         <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Ingat saya</span>
                     </label>
-                    <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500 font-medium transition-colors">
-                        Lupa kata sandi?
-                    </a>
+                    
                 </div>
 
                 <!-- Submit Button -->

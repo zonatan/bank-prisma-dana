@@ -82,21 +82,7 @@
     @endif
 </a>
 
-            <a href="{{ route('admin.forms') }}" 
-               class="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group relative overflow-hidden sidebar-menu-item
-                      {{ request()->routeIs('admin.forms') ? 
-                        'bg-white/20 shadow-lg backdrop-blur-sm' : 
-                        'hover:bg-white/10 hover:shadow-md' }}">
-                <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors flex-shrink-0">
-                    <i class="fas fa-file-pdf text-white text-sm"></i>
-                </div>
-                <span class="font-medium sidebar-content transition-all duration-300 overflow-hidden whitespace-nowrap">Form PDF</span>
-                @if(request()->routeIs('admin.forms'))
-                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 sidebar-content">
-                    <div class="w-2 h-2 bg-white rounded-full"></div>
-                </div>
-                @endif
-            </a>
+            
 
             <a href="{{ route('admin.users') }}" 
                class="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group relative overflow-hidden sidebar-menu-item
@@ -219,14 +205,7 @@
                 <span class="font-medium">Q&A Chatbot</span>
             </a>
 
-            <a href="{{ route('admin.forms') }}" 
-               class="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group mobile-nav-link
-                      {{ request()->routeIs('admin.forms') ? 'bg-white/20 shadow-lg backdrop-blur-sm' : 'hover:bg-white/10' }}">
-                <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-                    <i class="fas fa-file-pdf text-white text-sm"></i>
-                </div>
-                <span class="font-medium">Form PDF</span>
-            </a>
+            
 
             <a href="{{ route('admin.users') }}" 
                class="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group mobile-nav-link

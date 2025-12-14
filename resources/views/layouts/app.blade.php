@@ -278,39 +278,80 @@
         }, 300);
     });
 
+    // Variabel untuk melacak status chat
+    let isProcessing = false;
+    let activeQuestions = new Set();
+
     function ask(id, question) {
+        // Cek jika pertanyaan ini sedang diproses
+        if (activeQuestions.has(id)) {
+            console.log('Pertanyaan ini sedang diproses, tunggu...');
+            return;
+        }
+        
+        // Cek jika ada proses lain yang berjalan
+        if (isProcessing) {
+            console.log('Tunggu proses sebelumnya selesai...');
+            return;
+        }
+        
+        isProcessing = true;
+        activeQuestions.add(id);
+        
         const chatBox = document.getElementById('chat-box');
         
-        // Add user question
-        chatBox.innerHTML += `
-            <div class="flex justify-end">
+        // Cek jika pertanyaan ini sudah pernah ditampilkan sebelumnya
+        const existingAnswer = document.getElementById(`answer-${id}`);
+        if (existingAnswer) {
+            // Jika jawaban sudah ada, cukup scroll ke jawaban tersebut
+            existingAnswer.closest('.flex.items-start').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'nearest' 
+            });
+            isProcessing = false;
+            activeQuestions.delete(id);
+            return;
+        }
+        
+        // Tambah pertanyaan pengguna (HANYA jika belum ada)
+        const userQuestionId = `user-question-${id}`;
+        if (!document.getElementById(userQuestionId)) {
+            const userQuestionDiv = document.createElement('div');
+            userQuestionDiv.id = userQuestionId;
+            userQuestionDiv.className = 'flex justify-end chat-message';
+            userQuestionDiv.innerHTML = `
                 <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[80%]">
                     <p class="text-sm">${question}</p>
                 </div>
-            </div>
-        `;
-
-        // Add typing indicator
-        const typing = document.createElement('div');
-        typing.innerHTML = `
-            <div class="flex items-start gap-2">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-robot text-white text-xs"></i>
-                </div>
-                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%]">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
-                        <span class="ml-2 text-sm text-gray-500">Mengetik...</span>
+            `;
+            chatBox.appendChild(userQuestionDiv);
+        }
+        
+        // Tambah indikator mengetik (HANYA jika belum ada)
+        const typingId = `typing-${id}`;
+        if (!document.getElementById(typingId)) {
+            const typing = document.createElement('div');
+            typing.id = typingId;
+            typing.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-robot text-white text-xs"></i>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%]">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                            <span class="ml-2 text-sm text-gray-500">Mengetik...</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        chatBox.appendChild(typing);
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        // Fetch answer
+            `;
+            chatBox.appendChild(typing);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        // Fetch jawaban dari server
         fetch("{{ route('chat.send') }}", {
             method: "POST",
             headers: {
@@ -319,11 +360,22 @@
             },
             body: JSON.stringify({ qa_id: id })
         })
-        .then(r => r.json())
+        .then(r => {
+            if (!r.ok) throw new Error('Network response was not ok');
+            return r.json();
+        })
         .then(d => {
-            typing.remove();
-            const div = document.createElement('div');
-            div.innerHTML = `
+            // Hapus indikator mengetik
+            const typingElement = document.getElementById(typingId);
+            if (typingElement) {
+                typingElement.remove();
+            }
+            
+            // Buat elemen jawaban baru
+            const answerDiv = document.createElement('div');
+            answerDiv.id = `answer-container-${id}`;
+            answerDiv.className = 'chat-message';
+            answerDiv.innerHTML = `
                 <div class="flex items-start gap-2">
                     <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-robot text-white text-xs"></i>
@@ -333,16 +385,90 @@
                     </div>
                 </div>
             `;
-            chatBox.appendChild(div);
             
-            // Typewriter effect
-            new Typewriter(`#answer-${id}`, {
-                strings: [d.answer],
-                autoStart: true,
-                delay: 20,
-                cursor: ''
-            });
+            // Tambahkan ke chat box (setelah pertanyaan pengguna)
+            const userQuestionElement = document.getElementById(userQuestionId);
+            if (userQuestionElement) {
+                // Cari elemen setelah pertanyaan pengguna
+                let nextSibling = userQuestionElement.nextElementSibling;
+                while (nextSibling && nextSibling.id !== `answer-container-${id}`) {
+                    nextSibling = nextSibling.nextElementSibling;
+                }
+                
+                if (nextSibling) {
+                    // Jika sudah ada jawaban, ganti kontennya
+                    nextSibling.innerHTML = answerDiv.innerHTML;
+                } else {
+                    // Jika belum ada, tambahkan baru
+                    userQuestionElement.insertAdjacentElement('afterend', answerDiv);
+                }
+            } else {
+                chatBox.appendChild(answerDiv);
+            }
             
+            // Gunakan Typewriter effect untuk animasi mengetik
+            const targetElement = document.getElementById(`answer-${id}`);
+            if (targetElement && d.answer) {
+                let currentText = '';
+                const fullText = d.answer;
+                let index = 0;
+                
+                function typeWriter() {
+                    if (index < fullText.length) {
+                        currentText += fullText.charAt(index);
+                        targetElement.textContent = currentText;
+                        index++;
+                        setTimeout(typeWriter, 20); // Kecepatan mengetik
+                    } else {
+                        isProcessing = false;
+                        activeQuestions.delete(id);
+                    }
+                }
+                
+                // Mulai efek mengetik
+                setTimeout(() => {
+                    typeWriter();
+                }, 300);
+            } else {
+                // Fallback jika Typewriter gagal
+                if (targetElement && d.answer) {
+                    targetElement.textContent = d.answer;
+                }
+                isProcessing = false;
+                activeQuestions.delete(id);
+            }
+            
+            // Scroll ke jawaban
+            setTimeout(() => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            
+            // Hapus indikator mengetik jika error
+            const typingElement = document.getElementById(typingId);
+            if (typingElement) {
+                typingElement.remove();
+            }
+            
+            // Tampilkan pesan error
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'chat-message';
+            errorDiv.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-white text-xs"></i>
+                    </div>
+                    <div class="bg-red-50 p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] border border-red-200">
+                        <p class="text-sm text-red-700">Maaf, terjadi kesalahan. Silakan coba lagi.</p>
+                    </div>
+                </div>
+            `;
+            chatBox.appendChild(errorDiv);
+            
+            isProcessing = false;
+            activeQuestions.delete(id);
             chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
